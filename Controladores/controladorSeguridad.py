@@ -19,8 +19,10 @@ class ControladorSeguridad():
         headers = {"Content-Type": "application/json; charset=utf-8"}
         url=self.dataConfig["url-backend-seguridad"]+'/usuarios/validate'
         response = requests.post(url, json=data, headers=headers)
+        print(response)
         if response.status_code == 200:
             user = response.json()
+            print(user)
             expires = datetime.timedelta(seconds=60 * 60*24)
             access_token = create_access_token(identity=user,expires_delta=expires)
             return jsonify({"token": access_token, "user_id": user["_id"]})
