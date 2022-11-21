@@ -1,15 +1,16 @@
+import re
 from flask import Flask
 from flask import jsonify
 from flask import request
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import JWTManager, get_jwt_identity, verify_jwt_in_request
 import json
 from waitress import serve
 import datetime
 import requests
 
 import Endpoints
-from Controladores.controladorMiddleware import ControladorMiddleware
+
 
 app=Flask(__name__)
 cors = CORS(app)
@@ -17,10 +18,10 @@ cors = CORS(app)
 app.config["JWT_SECRET_KEY"]="super-secret" #Cambiar por el que seconveniente
 jwt = JWTManager(app)
 
-app.register_blueprint(Endpoints.endpointResultado)
+
 app.register_blueprint(Endpoints.endpointSeguridad)
 
-middleware = ControladorMiddleware()
+
 
 def loadFileConfig():
     with open ('config.json') as f:
@@ -28,13 +29,89 @@ def loadFileConfig():
     return data 
 
 @app.before_request
-def before_request_f ():
-    middleware.before_request_func()    
+def before_request_callback():
+    endPoint=limpiarURL(request.path)
+    excludedRoutes=["/login"]
+    if excludedRoutes.__contains__(request.path):
+        print("ruta excluida ",request.path)
+        pass
+    elif verify_jwt_in_request():
+        usuario = get_jwt_identity()
+        if usuario["rol"]is not None:
+            tienePersmiso=validarPermiso(endPoint,request.method,usuario["rol"]["_id"])
+            if not tienePersmiso:
+                return jsonify({"message": "Permission denied"}), 401
+        else:
+            return jsonify({"message": "Permission denied"}), 401
 
-@app.after_request
-def after_request_f (response):
-    r=middleware.after_request_func(response)
-    return r   
+def limpiarURL(url):
+    partes = request.path.split("/")
+    for laParte in partes:
+        if re.search('\\d', laParte):
+            url = url.replace(laParte, "?")
+    return url
+def validarPermiso(endPoint,metodo,idRol):
+    url=dataConfig["url-backend-seguridad"]+"/permisos-roles/validarpermiso/rol/"+str(idRol)
+    tienePermiso=False
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    body={
+        "url":endPoint,
+        "metodo":metodo
+    }
+    response = requests.get(url,json=body, headers=headers)
+    try:
+        data=response.json()
+        if("_id" in data):
+            tienePermiso=True
+    except:
+        pass
+    return tienePermiso  
+    
+########## RUTAS RESULTADO######
+
+@app.route("/resultado",methods=['GET'])
+def getResultados():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-resultados"] + '/resultado'
+    response = requests.get(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
+
+@app.route("/resultado",methods=['POST'])
+def crearResultado(self):
+        data = request.get_json()
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-resultados"] + '/resultado'
+        response = requests.post(url, headers=headers,json=data)
+        json = response.json()
+        return jsonify(json)
+
+@app.route("/resultado/<string:id>",methods=['GET'])
+def getResultado(id):
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-resultados"] + '/resultado/'+id
+        response = requests.get(url, headers=headers)
+        json = response.json()
+        return jsonify(json)
+
+@app.route("/resultado/<string:id>",methods=['PUT'])
+def modificarResultado(id):
+        data = request.get_json()
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-resultados"] + '/resultado/'+id
+        response = requests.put(url, headers=headers, json=data)
+        json = response.json()
+        return jsonify(json)
+
+@app.route("/resultado/<string:id>",methods=['DELETE'])     
+def eliminarResultado(id):
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-resultados"] + '/resultado/' + id
+        response = requests.delete(url, headers=headers)
+        json = response.json()
+        return jsonify(json)    
+##### FIN RUTAS RESULTADO#######        
+    
 
 @app.route("/",methods=['GET'])
 def test():
