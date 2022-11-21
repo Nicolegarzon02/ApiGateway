@@ -1,2 +1,1 @@
 from .endpointsSeguridad import endpointSeguridad
-from .endpointsResultado import endpointResultado
