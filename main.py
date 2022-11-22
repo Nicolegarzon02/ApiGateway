@@ -113,6 +113,8 @@ def eliminarResultado(id):
         return jsonify(json)
 ##### FIN RUTAS RESULTADO#######
 
+##### FIN PERMISOS-ROL#######
+
 @app.route("/permisos-roles",methods=['GET'])
 def getPermisoRol():
     headers = {"Content-Type": "application/json; charset=utf-8"}
