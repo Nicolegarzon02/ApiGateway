@@ -79,7 +79,7 @@ def getResultados():
     return jsonify(json)
 
 @app.route("/resultado",methods=['POST'])
-def crearResultado(self):
+def crearResultado():
         data = request.get_json()
         headers = {"Content-Type": "application/json; charset=utf-8"}
         url = dataConfig["url-backend-resultados"] + '/resultado'
@@ -124,7 +124,7 @@ def getPartidos():
     return jsonify(json)
 
 @app.route("/partido",methods=['POST'])
-def crearPartido(self):
+def crearPartido():
         data = request.get_json()
         headers = {"Content-Type": "application/json; charset=utf-8"}
         url = dataConfig["url-backend-resultados"] + '/partido'
@@ -159,8 +159,6 @@ def eliminarPartido(id):
 ##### FIN RUTAS PARTIDO #######
 
 ################################
-
-
 @app.route("/candidato",methods=["GET"])
 def getCandidatos():
     headers = {"Content-Type": "application/json; charset=utf-8"}
@@ -205,6 +203,7 @@ def eliminarCandidato(id):
 
 ################################
 
+##################################
 @app.route("/mesa",methods=["GET"])
 def getMesas():
     headers = {"Content-Type": "application/json; charset=utf-8"}
@@ -262,7 +261,7 @@ def getUsuarios():
     return jsonify(json)
 
 @app.route("/usuarios",methods=['POST'])
-def crearUsuarios(self):
+def crearUsuarios():
         data = request.get_json()
         headers = {"Content-Type": "application/json; charset=utf-8"}
         url = dataConfig["url-backend-seguridad"] + '/usuarios'
@@ -272,20 +271,20 @@ def crearUsuarios(self):
 
 @app.route("/usuarios/<string:id>",methods=['GET'])
 def getUsuario(id):
-        headers = {"Content-Type": "application/json; charset=utf-8"}
-        url = dataConfig["url-backend-seguridad"] + '/usuarios/'+id
-        response = requests.get(url, headers=headers)
-        json = response.json()
-        return jsonify(json)
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-seguridad"] + '/usuarios/'+id
+    response = requests.get(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
 
 @app.route("/usuarios/<string:id>",methods=['PUT'])
 def modificarUsuarios(id):
-        data = request.get_json()
-        headers = {"Content-Type": "application/json; charset=utf-8"}
-        url = dataConfig["url-backend-seguridad"] + '/usuarios/'+id
-        response = requests.put(url, headers=headers, json=data)
-        json = response.json()
-        return jsonify(json)
+    data = request.get_json()
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-seguridad"] + "/usuarios/" +id
+    response = requests.put(url, headers=headers, json=data)
+    json = response.json()
+    return jsonify(json)
 
 @app.route("/usuarios/<string:id>",methods=['DELETE'])
 def eliminarUsuario(id):
@@ -300,21 +299,21 @@ def eliminarUsuario(id):
 
 @app.route("/roles",methods=['GET'])
 def getRoles():
-        data = request.get_json()
-        headers = {"Content-Type": "application/json; charset=utf-8"}
-        url = dataConfig["url-backend-seguridad"] + '/roles'
-        response = requests.post(url, headers=headers,json=data)
-        json = response.json()
-        return jsonify(json)
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-seguridad"] + '/roles'
+    response = requests.get(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
 
 @app.route("/roles",methods=['POST'])
-def crearRol(self):
-        data = request.get_json()
-        headers = {"Content-Type": "application/json; charset=utf-8"}
-        url = dataConfig["url-backend-seguridad"] + '/roles'
-        response = requests.post(url, headers=headers,json=data)
-        json = response.json()
-        return jsonify(json)
+def crearRol():
+    data = request.get_json()
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-seguridad"] + "/roles"
+    response = requests.post(url, headers=headers,json=data)
+    json = response.json()
+    return jsonify(json)
+
 
 @app.route("/roles/<string:id>",methods=['GET'])
 def getRol(id):
@@ -346,15 +345,14 @@ def eliminarRol(id):
 
 @app.route("/permisos",methods=['GET'])
 def getPermisos():
-        data = request.get_json()
-        headers = {"Content-Type": "application/json; charset=utf-8"}
-        url = dataConfig["url-backend-seguridad"] + '/permisos'
-        response = requests.post(url, headers=headers,json=data)
-        json = response.json()
-        return jsonify(json)
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-seguridad"] + '/permisos'
+    response = requests.get(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
 
 @app.route("/permisos",methods=['POST'])
-def crearPermisos(self):
+def crearPermisos():
         data = request.get_json()
         headers = {"Content-Type": "application/json; charset=utf-8"}
         url = dataConfig["url-backend-seguridad"] + '/permisos'
@@ -399,7 +397,7 @@ def getPermisoRol():
     return jsonify(json)
 
 @app.route("/permisos-roles",methods=['POST'])
-def crearPermisorol(self):
+def crearPermisorol():
         data = request.get_json()
         headers = {"Content-Type": "application/json; charset=utf-8"}
         url = dataConfig["url-backend-seguridad"] + '/permisos-roles'
