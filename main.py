@@ -28,6 +28,7 @@ def loadFileConfig():
         data = json.load(f)
     return data 
 
+##### MILDWARE ######
 @app.before_request
 def before_request_callback():
     endPoint=limpiarURL(request.path)
@@ -43,6 +44,7 @@ def before_request_callback():
                 return jsonify({"message": "Permission denied"}), 401
         else:
             return jsonify({"message": "Permission denied"}), 401
+#####  FIN MILDWARE ###########        
 
 def limpiarURL(url):
     partes = request.path.split("/")
