@@ -312,7 +312,7 @@ def crearPermisos(self):
         response = requests.post(url, headers=headers,json=data)
         json = response.json()
         return jsonify(json)
-
+"""
 @app.route("/usuarios/<string:id>",methods=['GET'])
 def getPermisos(id):
         headers = {"Content-Type": "application/json; charset=utf-8"}
@@ -320,7 +320,7 @@ def getPermisos(id):
         response = requests.get(url, headers=headers)
         json = response.json()
         return jsonify(json)
-
+"""
 @app.route("/usuarios/<string:id>",methods=['PUT'])
 def modificarPermisos(id):
         data = request.get_json()
