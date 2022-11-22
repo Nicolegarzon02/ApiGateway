@@ -50,6 +50,7 @@ def limpiarURL(url):
         if re.search('\\d', laParte):
             url = url.replace(laParte, "?")
     return url
+
 def validarPermiso(endPoint,metodo,idRol):
     url=dataConfig["url-backend-seguridad"]+"/permisos-roles/validarpermiso/rol/"+str(idRol)
     tienePermiso=False
@@ -103,15 +104,151 @@ def modificarResultado(id):
         json = response.json()
         return jsonify(json)
 
-@app.route("/resultado/<string:id>",methods=['DELETE'])     
+@app.route("/resultado/<string:id>",methods=['DELETE'])
 def eliminarResultado(id):
         headers = {"Content-Type": "application/json; charset=utf-8"}
         url = dataConfig["url-backend-resultados"] + '/resultado/' + id
         response = requests.delete(url, headers=headers)
         json = response.json()
-        return jsonify(json)    
-##### FIN RUTAS RESULTADO#######        
-    
+        return jsonify(json)
+##### FIN RUTAS RESULTADO#######
+
+
+########## RUTAS PARTIDO ######
+
+@app.route("/partido",methods=['GET'])
+def getPartidos():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-resultados"] + '/partido'
+    response = requests.get(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
+
+@app.route("/partido",methods=['POST'])
+def crearPartido(self):
+        data = request.get_json()
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-resultados"] + '/partido'
+        response = requests.post(url, headers=headers,json=data)
+        json = response.json()
+        return jsonify(json)
+
+@app.route("/partido/<string:id>",methods=['GET'])
+def getPartido(id):
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-resultados"] + '/partido/'+id
+        response = requests.get(url, headers=headers)
+        json = response.json()
+        return jsonify(json)
+
+@app.route("/partido/<string:id>",methods=['PUT'])
+def modificarPartido(id):
+        data = request.get_json()
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-resultados"] + '/partido/'+id
+        response = requests.put(url, headers=headers, json=data)
+        json = response.json()
+        return jsonify(json)
+
+@app.route("/partido/<string:id>",methods=['DELETE'])
+def eliminarPartido(id):
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-resultados"] + '/partido/' + id
+        response = requests.delete(url, headers=headers)
+        json = response.json()
+        return jsonify(json)
+##### FIN RUTAS PARTIDO #######
+
+################################
+
+
+@app.route("/candidato",methods=["GET"])
+def getCandidatos():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-resultados"] + '/candidato'
+    response = requests.get(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
+
+@app.route("/candidato",methods=["POST"])
+def crearCandidato():
+    data = request.get_json()
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-resultados"] + "/candidato"
+    response = requests.post(url, headers=headers,json=data)
+    json = response.json()
+    return jsonify(json)
+
+@app.route("/candidato/<string:id>",methods=["GET"])
+def getCandidato(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-resultados"] + "/candidato/" +id
+    response = requests.get(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
+
+@app.route("/candidato/<string:id>",methods=["PUT"])
+def modificarCandidato(id):
+    data = request.get_json()
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-resultados"] + "/candidato/" +id
+    response = requests.put(url, headers=headers, json=data)
+    json = response.json()
+    return jsonify(json)
+
+@app.route("/candidato/<string:id>",methods=["DELETE"])
+def eliminarCandidato(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-resultados"] + "/candidato/" + id
+    response = requests.delete(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
+
+################################
+
+@app.route("/mesa",methods=["GET"])
+def getMesas():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-resultados"] + '/mesa'
+    response = requests.get(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
+
+@app.route("/mesa",methods=["POST"])
+def crearMesa():
+    data = request.get_json()
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-resultados"] + "/mesa"
+    response = requests.post(url, headers=headers,json=data)
+    json = response.json()
+    return jsonify(json)
+
+@app.route("/mesa/<string:id>",methods=["GET"])
+def getMesa(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-resultados"] + "/mesa/" +id
+    response = requests.get(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
+
+@app.route("/mesa/<string:id>",methods=["PUT"])
+def modificarMesa(id):
+    data = request.get_json()
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-resultados"] + "/mesa/" +id
+    response = requests.put(url, headers=headers, json=data)
+    json = response.json()
+    return jsonify(json)
+
+@app.route("/mesa/<string:id>",methods=["DELETE"])
+def eliminarMesa(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-resultados"] + "/mesa/" + id
+    response = requests.delete(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
+################################
+
 
 @app.route("/",methods=['GET'])
 def test():
