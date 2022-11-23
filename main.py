@@ -6,7 +6,6 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager, get_jwt_identity, verify_jwt_in_request
 import json
 from waitress import serve
-import datetime
 import requests
 
 import Endpoints
@@ -26,9 +25,12 @@ app.register_blueprint(Endpoints.endpointSeguridad)
 def loadFileConfig():
     with open ('config.json') as f:
         data = json.load(f)
-    return data 
+    return data
 
-##### MILDWARE ######
+########################
+###    MIDDLEWARE    ###
+########################
+
 @app.before_request
 def before_request_callback():
     endPoint=limpiarURL(request.path)
@@ -44,7 +46,10 @@ def before_request_callback():
                 return jsonify({"message": "Permission denied"}), 401
         else:
             return jsonify({"message": "Permission denied"}), 401
-#####  FIN MILDWARE ###########        
+
+############################
+###    FIN MIDDLEWARE    ###
+############################
 
 def limpiarURL(url):
     partes = request.path.split("/")
@@ -70,52 +75,14 @@ def validarPermiso(endPoint,metodo,idRol):
         pass
     return tienePermiso
 
-########## RUTAS RESULTADO######
 
-@app.route("/resultado",methods=['GET'])
-def getResultados():
-    headers = {"Content-Type": "application/json; charset=utf-8"}
-    url = dataConfig["url-backend-resultados"] + '/resultado'
-    response = requests.get(url, headers=headers)
-    json = response.json()
-    return jsonify(json)
+######################################
+###    RUTAS BACKEND RESULTADOS    ###
+######################################
 
-@app.route("/resultado",methods=['POST'])
-def crearResultado():
-        data = request.get_json()
-        headers = {"Content-Type": "application/json; charset=utf-8"}
-        url = dataConfig["url-backend-resultados"] + '/resultado'
-        response = requests.post(url, headers=headers,json=data)
-        json = response.json()
-        return jsonify(json)
-
-@app.route("/resultado/<string:id>",methods=['GET'])
-def getResultado(id):
-        headers = {"Content-Type": "application/json; charset=utf-8"}
-        url = dataConfig["url-backend-resultados"] + '/resultado/'+id
-        response = requests.get(url, headers=headers)
-        json = response.json()
-        return jsonify(json)
-
-@app.route("/resultado/<string:id>",methods=['PUT'])
-def modificarResultado(id):
-        data = request.get_json()
-        headers = {"Content-Type": "application/json; charset=utf-8"}
-        url = dataConfig["url-backend-resultados"] + '/resultado/'+id
-        response = requests.put(url, headers=headers, json=data)
-        json = response.json()
-        return jsonify(json)
-
-@app.route("/resultado/<string:id>",methods=['DELETE'])
-def eliminarResultado(id):
-        headers = {"Content-Type": "application/json; charset=utf-8"}
-        url = dataConfig["url-backend-resultados"] + '/resultado/' + id
-        response = requests.delete(url, headers=headers)
-        json = response.json()
-        return jsonify(json)
-##### FIN RUTAS RESULTADO#######
-
-########## RUTAS PARTIDO ######
+############################
+###    RUTAS PARTIDOS    ###
+############################
 
 @app.route("/partido",methods=['GET'])
 def getPartidos():
@@ -158,9 +125,15 @@ def eliminarPartido(id):
         response = requests.delete(url, headers=headers)
         json = response.json()
         return jsonify(json)
-##### FIN RUTAS PARTIDO #######
 
-################################
+###############################
+###   FIN RUTAS PARTIDOS    ###
+###############################
+
+##############################
+###    RUTAS CANDIDATOS    ###
+##############################
+
 @app.route("/candidato",methods=["GET"])
 def getCandidatos():
     headers = {"Content-Type": "application/json; charset=utf-8"}
@@ -190,7 +163,7 @@ def getCandidato(id):
 def modificarCandidato(id):
     data = request.get_json()
     headers = {"Content-Type": "application/json; charset=utf-8"}
-    url = dataConfig["url-backend-resultados"] + "/candidato/" +id
+    url = dataConfig["url-backend-resultados"] + '/candidato/'+id
     response = requests.put(url, headers=headers, json=data)
     json = response.json()
     return jsonify(json)
@@ -203,9 +176,14 @@ def eliminarCandidato(id):
     json = response.json()
     return jsonify(json)
 
-################################
-
 ##################################
+###    FIN RUTAS CANDIDATOS    ###
+##################################
+
+#########################
+###    RUTAS MESAS    ###
+#########################
+
 @app.route("/mesa",methods=["GET"])
 def getMesas():
     headers = {"Content-Type": "application/json; charset=utf-8"}
@@ -247,13 +225,72 @@ def eliminarMesa(id):
     response = requests.delete(url, headers=headers)
     json = response.json()
     return jsonify(json)
-################################
+#############################
+###    FIN RUTAS MESAS    ###
+#############################
+
+#############################
+###    RUTAS RSULTADOS    ###
+#############################
+
+@app.route("/resultado",methods=['GET'])
+def getResultados():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-resultados"] + '/resultado'
+    response = requests.get(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
+
+@app.route("/resultado",methods=['POST'])
+def crearResultado():
+        data = request.get_json()
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-resultados"] + '/resultado'
+        response = requests.post(url, headers=headers,json=data)
+        json = response.json()
+        return jsonify(json)
+
+@app.route("/resultado/<string:id>",methods=['GET'])
+def getResultado(id):
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-resultados"] + '/resultado/'+id
+        response = requests.get(url, headers=headers)
+        json = response.json()
+        return jsonify(json)
+
+@app.route("/resultado/<string:id>",methods=['PUT'])
+def modificarResultado(id):
+        data = request.get_json()
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-resultados"] + '/resultado/'+id
+        response = requests.put(url, headers=headers, json=data)
+        json = response.json()
+        return jsonify(json)
+
+@app.route("/resultado/<string:id>",methods=['DELETE'])
+def eliminarResultado(id):
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-resultados"] + '/resultado/' + id
+        response = requests.delete(url, headers=headers)
+        json = response.json()
+        return jsonify(json)
+
+##################################
+###    FIN RUTAS RESULTADOS    ###
+##################################
+
+##########################################
+###    FIN RUTAS BACKEND RESULTADOS    ###
+##########################################
 
 
+#####################################
+###    RUTAS BACKEND SEGURIDAD    ###
+#####################################
 
-########## RUTAS USUARIOS ######
-
-
+############################
+###    RUTAS USUARIOS    ###
+############################
 @app.route("/usuarios",methods=['GET'])
 def getUsuarios():
     headers = {"Content-Type": "application/json; charset=utf-8"}
@@ -264,12 +301,12 @@ def getUsuarios():
 
 @app.route("/usuarios",methods=['POST'])
 def crearUsuarios():
-        data = request.get_json()
-        headers = {"Content-Type": "application/json; charset=utf-8"}
-        url = dataConfig["url-backend-seguridad"] + '/usuarios'
-        response = requests.post(url, headers=headers,json=data)
-        json = response.json()
-        return jsonify(json)
+    data = request.get_json()
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-seguridad"] + '/usuarios'
+    response = requests.post(url, headers=headers,json=data)
+    json = response.json()
+    return jsonify(json)
 
 @app.route("/usuarios/<string:id>",methods=['GET'])
 def getUsuario(id):
@@ -290,14 +327,19 @@ def modificarUsuarios(id):
 
 @app.route("/usuarios/<string:id>",methods=['DELETE'])
 def eliminarUsuario(id):
-        headers = {"Content-Type": "application/json; charset=utf-8"}
-        url = dataConfig["url-backend-seguridad"] + '/usuarios/' + id
-        response = requests.delete(url, headers=headers)
-        json = response.json()
-        return jsonify(json)
-##### FIN RUTAS USUARIO #######
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-seguridad"] + '/usuarios/' + id
+    response = requests.delete(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
 
-########## RUTAS ROLES ######
+################################
+###    FIN RUTAS USUARIOS    ###
+################################
+
+#########################
+###    RUTAS ROLES    ###
+#########################
 
 @app.route("/roles",methods=['GET'])
 def getRoles():
@@ -341,9 +383,14 @@ def eliminarRol(id):
         response = requests.delete(url, headers=headers)
         json = response.json()
         return jsonify(json)
-##### FIN RUTAS ROLES #######
 
-########## RUTAS PERMISOS ######
+#############################
+###    FIN RUTAS ROLES    ###
+#############################
+
+############################
+###    RUTAS PERMISOS    ###
+############################
 
 @app.route("/permisos",methods=['GET'])
 def getPermisos():
@@ -386,7 +433,61 @@ def eliminarPermiso(id):
         response = requests.delete(url, headers=headers)
         json = response.json()
         return jsonify(json)
-##### FIN RUTAS PERMISOS #######
+
+################################
+###    FIN RUTAS PERMISOS    ###
+################################
+
+#################################
+###    RUTAS PERMISOS-ROLES   ###
+#################################
+
+@app.route("/permisos-roles",methods=['GET'])
+def getPermisosRoles():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-backend-seguridad"] + '/permisos-roles'
+    response = requests.get(url, headers=headers)
+    json = response.json()
+    return jsonify(json)
+
+@app.route("/permisos-roles",methods=['POST'])
+def crearPermisoRoles():
+        data = request.get_json()
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-seguridad"] + '/permisos-roles/' + '/rol/'+ id + '/permiso/' + id
+        response = requests.post(url, headers=headers,json=data)
+        json = response.json()
+        return jsonify(json)
+
+@app.route("/permisos-roles/<string:id>",methods=['GET'])
+def getPermisoRoles(id):
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-seguridad"] + '/permisos-roles/'+id
+        response = requests.get(url, headers=headers)
+        json = response.json()
+        return jsonify(json)
+
+@app.route("/permisos-roles/<string:id>",methods=['PUT'])
+def modificarPermisosRoles(id):
+        data = request.get_json()
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-seguridad"] + '/permisos-roles/'+id
+        response = requests.put(url, headers=headers, json=data)
+        json = response.json()
+        return jsonify(json)
+
+@app.route("/permisos-roles/<string:id>",methods=['DELETE'])
+def eliminarPermisosRoles(id):
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+        url = dataConfig["url-backend-seguridad"] + '/permisos-roles/' + id
+        response = requests.delete(url, headers=headers)
+        json = response.json()
+        return jsonify(json)
+
+######################################
+###    FIN RUTAS PERMISOS-ROLES    ###
+######################################
+
 
 
 @app.route("/",methods=['GET'])
