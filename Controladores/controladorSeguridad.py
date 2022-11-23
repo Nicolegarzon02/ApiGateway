@@ -11,7 +11,6 @@ class ControladorSeguridad():
     def __init__(self):
         print(" >Creando Controlador seguridad")
         self.dataConfig =self.loadFileConfig()
-        
 
     def login(self,data):
         print("> Login: " + str(data))
@@ -28,11 +27,8 @@ class ControladorSeguridad():
             return jsonify({"token": access_token, "user_id": user["_id"]})
         else:
             return jsonify({"msg": "Bad username or password"}), 401
-    
+
     def loadFileConfig(self):
         with open ('config.json') as f:
             data = json.load(f)
-        return data     
-
-  
-  
+        return data

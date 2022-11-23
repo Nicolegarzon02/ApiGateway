@@ -27,7 +27,6 @@ def loadFileConfig():
         data = json.load(f)
     return data
 
-
 ########################
 ###    MIDDLEWARE    ###
 ########################
